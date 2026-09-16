@@ -46,7 +46,11 @@ export function FanDevice(
   // On/off-only fan: no speed control and no speed-capable preset modes.
   // Use OnOffPlugInUnitDevice to avoid controllers showing percentage/speed
   // controls from the FanControl cluster's mandatory percentSetting attribute.
-  if (!hasSetSpeed && speedPresets.length === 0) {
+  // If the entity mapping explicitly requests a Matter Fan, honor that override
+  // so cloud-to-Matter deduplication can match cloud devices typed as fans.
+  const forceMatterFan =
+    homeAssistantEntity.mapping?.matterDeviceType === "fan";
+  if (!forceMatterFan && !hasSetSpeed && speedPresets.length === 0) {
     const onOffDevice = hasBattery
       ? OnOffPlugInUnitDevice.with(
           IdentifyServer,
