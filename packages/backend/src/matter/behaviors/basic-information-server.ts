@@ -72,6 +72,8 @@ export class BasicInformationServer extends Base {
       : basicInformation.vendorId;
     applyPatchState(this.state, {
       vendorId: VendorId(vendorId),
+      productId: basicInformation.productId,
+      configurationVersion: 4,
       vendorName:
         ellipse(32, mapping?.customVendorName) ??
         ellipse(32, device?.manufacturer) ??

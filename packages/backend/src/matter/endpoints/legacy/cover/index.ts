@@ -5,7 +5,7 @@ import {
 import { Logger } from "@matter/general";
 import type { EndpointType } from "@matter/main";
 import type { WindowCovering } from "@matter/main/clusters";
-import { WindowCoveringDevice } from "@matter/main/devices";
+import { ClosureDevice, WindowCoveringDevice } from "@matter/main/devices";
 
 const logger = Logger.get("CoverDevice");
 
@@ -20,9 +20,21 @@ import {
   CoverAsDimmableLightWithBatteryType,
 } from "./behaviors/cover-as-light.js";
 import {
+  ClosureControlServer,
+  ClosureDimensionServer,
+} from "./behaviors/cover-closure-server.js";
+import {
   CoverWindowCoveringServer,
   coverHasTilt,
 } from "./behaviors/cover-window-covering-server.js";
+
+const GarageClosureDeviceType = ClosureDevice.with(
+  BasicInformationServer,
+  IdentifyServer,
+  HomeAssistantEntityBehavior,
+  ClosureControlServer,
+  ClosureDimensionServer,
+);
 
 const CoverDeviceType = (
   supportedFeatures: number,
@@ -90,6 +102,7 @@ export function CoverDevice(
     .attributes as CoverDeviceAttributes & {
     battery?: number;
     battery_level?: number;
+    device_class?: string;
   };
   const hasBatteryAttr =
     attributes.battery_level != null || attributes.battery != null;
@@ -105,6 +118,11 @@ export function CoverDevice(
     logger.debug(
       `[${entityId}] Creating cover without battery (batteryAttr=${hasBatteryAttr}, batteryEntity=${homeAssistantEntity.mapping?.batteryEntity ?? "none"})`,
     );
+  }
+
+  if (attributes.device_class === "garage") {
+    logger.info(`[${entityId}] Exposing garage cover as Matter Closure`);
+    return GarageClosureDeviceType.set({ homeAssistantEntity });
   }
 
   // Alexa stopped sending WindowCovering position commands; expose the cover
