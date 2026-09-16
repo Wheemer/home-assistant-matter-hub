@@ -149,7 +149,7 @@ jobs:
     name: "Publish to npm"
     runs-on: ubuntu-latest
     needs: [release]
-    if: needs.release.outputs.release-version != ''
+    if: false # fork: do not publish npm package
     permissions:
       id-token: write
     steps:
@@ -188,7 +188,7 @@ jobs:
     name: "Dispatch Addon Repository"
     runs-on: ubuntu-latest
     needs: [release, docker]
-    if: needs.release.outputs.release-version != ''
+    if: false # fork: do not dispatch upstream add-on repository
     steps:
       - name: Dispatch Addon Repository
         uses: peter-evans/repository-dispatch@v4
