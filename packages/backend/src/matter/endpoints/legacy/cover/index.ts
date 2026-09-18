@@ -5,7 +5,7 @@ import {
 import { Logger } from "@matter/general";
 import type { EndpointType } from "@matter/main";
 import type { WindowCovering } from "@matter/main/clusters";
-import { ClosureDevice, WindowCoveringDevice } from "@matter/main/devices";
+import { WindowCoveringDevice } from "@matter/main/devices";
 
 const logger = Logger.get("CoverDevice");
 
@@ -20,21 +20,9 @@ import {
   CoverAsDimmableLightWithBatteryType,
 } from "./behaviors/cover-as-light.js";
 import {
-  ClosureControlServer,
-  ClosureDimensionServer,
-} from "./behaviors/cover-closure-server.js";
-import {
   CoverWindowCoveringServer,
   coverHasTilt,
 } from "./behaviors/cover-window-covering-server.js";
-
-const GarageClosureDeviceType = ClosureDevice.with(
-  BasicInformationServer,
-  IdentifyServer,
-  HomeAssistantEntityBehavior,
-  ClosureControlServer,
-  ClosureDimensionServer,
-);
 
 const CoverDeviceType = (
   supportedFeatures: number,
@@ -120,10 +108,6 @@ export function CoverDevice(
     );
   }
 
-  if (attributes.device_class === "garage") {
-    logger.info(`[${entityId}] Exposing garage cover as Matter Closure`);
-    return GarageClosureDeviceType.set({ homeAssistantEntity });
-  }
 
   // Alexa stopped sending WindowCovering position commands; expose the cover
   // as a Dimmable Light so its slider still works (#372).
