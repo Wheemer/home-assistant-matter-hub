@@ -107,7 +107,6 @@ export function CoverDevice(
     );
   }
 
-
   // Alexa stopped sending WindowCovering position commands; expose the cover
   // as a Dimmable Light so its slider still works (#372).
   if (homeAssistantEntity.mapping?.coverExposeAsDimmableLight) {

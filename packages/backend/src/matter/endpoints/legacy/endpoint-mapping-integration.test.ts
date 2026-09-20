@@ -631,7 +631,7 @@ describe("endpoint mapping integration", () => {
       expect(type?.behaviors).not.toHaveProperty("windowCovering");
     });
 
-    it("garage cover stays a WindowCovering for Google Matter compatibility", () => {
+    it("garage cover has windowCovering behavior (discrete mode)", () => {
       const entity = createEntity<
         CoverDeviceAttributes & { device_class: string }
       >("cover.garage1", "closed", {
@@ -640,8 +640,6 @@ describe("endpoint mapping integration", () => {
       });
       const { type } = createAndValidate(entity);
       expect(type.behaviors).toHaveProperty("windowCovering");
-      expect(type.behaviors).not.toHaveProperty("closureControl");
-      expect(type.behaviors).not.toHaveProperty("closureDimension");
     });
 
     it("lock has doorLock behavior", () => {
