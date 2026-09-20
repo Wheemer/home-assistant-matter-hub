@@ -90,7 +90,6 @@ export function CoverDevice(
     .attributes as CoverDeviceAttributes & {
     battery?: number;
     battery_level?: number;
-    device_class?: string;
   };
   const hasBatteryAttr =
     attributes.battery_level != null || attributes.battery != null;
